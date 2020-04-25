@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  div
+    ul
+    each weekend in weekendList
+      li(class='weekend') 
+        p(class='weekend_firstDay') #{weekend.firstDay.calendar(null, format)}
+        p(class='weekend_lastDay') #{weekend.lastDay.calendar(null, format)}
+    else
+      li Query sent no weekend.
