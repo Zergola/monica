@@ -6,3 +6,24 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+#weekendList li {
+  list-style: none;
+}
+
+.weekend {
+    padding:5px;
+}
+.weekend p{
+  margin:0px;
+  padding:0px;
+}
+
+.weekendDay,.holiday {
+  background-color: #62f09b;
+}
+
+.weekDay {
+  background-color: #f5ed93;
+}

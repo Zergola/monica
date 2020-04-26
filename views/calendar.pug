@@ -4,10 +4,16 @@ block content
   h1= title
   p Welcome to #{title}
   div
-    ul
-    each weekend in weekendList
-      li(class='weekend') 
-        p(class='weekend_firstDay') #{weekend.firstDay.calendar(null, format)}
-        p(class='weekend_lastDay') #{weekend.lastDay.calendar(null, format)}
-    else
-      li Query sent no weekend.
+    ul#weekendList
+      each weekend in weekendList
+        li(class='weekend')
+          each day in weekend
+            div(class = day.type)
+              - let display = day.moment.calendar(null, format);
+              - if('label' in day){display += ' (' + day.label + ')'};
+              p= display
+          else
+            div.empty
+              p No day in this weekend.
+      else
+        li Query sent no weekend.
