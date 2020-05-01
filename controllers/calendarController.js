@@ -1,5 +1,5 @@
 var moment = require('moment');
-
+var Event = require('../models/events');
 // il faut importer la holidayList pour localeHolidaysList depuis holidaysController afin que la fonction
 // generateWeekendList fonctionne
 //

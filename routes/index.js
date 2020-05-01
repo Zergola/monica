@@ -3,7 +3,7 @@ var router = express.Router();
 
 // GET home page.
 router.get('/', function(req, res) {
-  res.send('NOT IMPLEMENTED: Site Home Page');
+  res.render('index',{title:'Monica'});
 });
 
 

@@ -14,10 +14,15 @@ a {
 
 .weekend {
     padding:5px;
+    display:flex;
 }
 .weekend p{
   margin:0px;
   padding:0px;
+}
+
+.container-weekend {
+width:30%;
 }
 
 .weekendDay,.holiday {

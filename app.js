@@ -6,20 +6,22 @@ var logger = require('morgan');
 var moment = require('moment');
 moment.locale('fr');
 
+
 var calendarRouter = require('./routes/calendar');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var eventRouter = require('./routes/events');
 
 var holidaysController = require('./modules/holidays');
 
 var app = express(); 
-
+app.locals.moment = require('moment');
 //Import the mongoose module
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
 var mongoDB = process.env.mongoDB;
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Get the default connection
 var db = mongoose.connection;
@@ -42,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/calendar', calendarRouter);
-
+app.use('/event', eventRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

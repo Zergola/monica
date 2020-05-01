@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p= errors
+
+  if (body !== undefined)
+    - id = body._id
+    - titleValue = body.title
+    - startDateValue = moment(body.startDate).format("YYYY-MM-DD");
+    - endDateValue = moment(body.endDate).format("YYYY-MM-DD");
+    - notesValue = body.notes
+  else
+    - titleValue = ''
+    - startDateValue = ''
+    - endDateValue = ''
+    - notesValue = ''  
+
+  form(method="post")
+    p
+      label(for="title") Title
+      input(type="text" name="title" value=titleValue)
+      input(type="hidden" name="id" value=id)
+    p
+      label(for="startDate") Start Date
+      input(type="date" name="startDate" value=startDateValue)
+    p
+      label(for="endDate") End Date
+      input(type="date" name="endDate" value=endDateValue)
+    p
+      label(for="notes") Notes
+      textarea(name="notes", cols="30", rows="10")= notesValue
+    p
+      input(type="submit")
+
+  form(method="post" action=id+"/delete")
+    p
+      input(type="hidden" name="id" value=id)
+      input(type="submit" value="Delete")
