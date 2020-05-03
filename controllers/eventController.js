@@ -1,11 +1,26 @@
 const { body,validationResult } = require('express-validator');
 const validator = require('validator');
+const url = require('url');
+const moment = require('moment');
 //Create a SomeModel model just by requiring the module
 var Event = require('../models/events');
 
 exports.createEvent_get = function(req, res) {
+  
+  const postedParameters = url.parse(req.url,true).query;
+  for (label in postedParameters) {
+    postedParameters[label] = validator.escape(postedParameters[label])
+  }
 
-    res.render('event', { title: 'Event creation' });
+  if (postedParameters.startDate === undefined) {
+    postedParameters.startDate = moment().day(6).format("YYYY-MM-DD");
+  }
+  if (postedParameters.endDate === undefined) {
+    postedParameters.endDate = moment().day(6+1).format("YYYY-MM-DD");
+  }
+
+
+  res.render('event', { title: 'Event creation', params:postedParameters });
 };
 
 exports.displayEvent = function(req, res) {
@@ -117,9 +132,10 @@ exports.deleteEvent = function(req, res,next) {
 }
 
 exports.checkEventDataCompliance = async function(req,res,next){ //check posted data and check if compliant
-
+  var dayBeforeStartDate = moment(req.body.startDate).subtract(1, 'days').format("YYYY-MM-DD");
+  console.log(136, dayBeforeStartDate);
   await body('title').isLength({ min: 1 }).withMessage('Title must be filled').escape().run(req);
-  await body('endDate').isAfter(req.body.startDate).withMessage('endDate Must be after the startDate').run(req);
+  await body('endDate').isAfter(dayBeforeStartDate).withMessage('endDate Must be after the startDate').run(req);
   await body('notes').escape().run(req);
 
   const errors = validationResult(req);

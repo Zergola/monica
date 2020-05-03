@@ -17,6 +17,7 @@
     "mongoose": "^5.9.10",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11",
+    "url": "^0.11.0",
     "validator": "^13.0.0"
   },
   "devDependencies": {

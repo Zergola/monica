@@ -4,11 +4,15 @@ block content
   h1= title
   p Welcome to #{title}
   div
+
     ul#weekendList
-      each weekend in weekendList
+      - var n = 0;
+      - console.log(weekendList.length);
+      while n < weekendList.length
         li(class='weekend')
+
           div.container-weekend
-            each day in weekend
+            each day in weekendList[n]
               div(class = day.type)
                 - let display = day.moment.calendar(null, format);
                 - if('label' in day){display += ' (' + day.label + ')'};
@@ -16,5 +20,16 @@ block content
             else
               div.empty
                 p No day in this weekend.
-      else
-        li Query sent no weekend.
+          
+          if userEventList[n]
+            a(href="../event/"+userEventList[n]._id).user-weekend-container
+              div.userEventHeader
+              p= userEventList[n].title
+              div.userEventContent
+              p= moment(userEventList[n].startDate).calendar(null, format) + ' -> ' + moment(userEventList[n].endDate).calendar(null, format)
+          else
+            a(href="../event/create?startDate="+weekendList[n][0].moment.format("YYYY-MM-DD")+"&endDate="+weekendList[n][weekendList[n].length-1].moment.format("YYYY-MM-DD")).user-weekend-container
+              div.empty.userEventHeader
+              div.empty.userEventContent
+        - n++
+      

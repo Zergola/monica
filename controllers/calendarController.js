@@ -1,5 +1,6 @@
 var moment = require('moment');
 var Event = require('../models/events');
+var validator = require('validator');
 // il faut importer la holidayList pour localeHolidaysList depuis holidaysController afin que la fonction
 // generateWeekendList fonctionne
 //
@@ -8,11 +9,13 @@ var Event = require('../models/events');
 var holidaysModule = require("../modules/holidays");
 let isHoliday = holidaysModule.isHoliday;
 let defaultCountry = 'fr';
-
+let weekendToDisplay = 52;
 
 // Display the user calendar
-exports.displayCalendar = function(req, res) {
+exports.displayCalendar = async function(req, res) {
     let weekendList = generateWeekendList();
+    let userEventList = await generateUserEventList(weekendList);
+
     dateFormat =     {
         sameDay: "[Aujourd'hui]",
         nextDay: "[Demain]",
@@ -21,12 +24,12 @@ exports.displayCalendar = function(req, res) {
         lastWeek: "dddd [dernier]",
         sameElse: "dddd Do MMM YYYY"
         }
-    res.render('calendar', { title: 'Calendar', weekendList:weekendList, format:dateFormat });
+    res.render('calendar', { title: 'Calendar', weekendList:weekendList, userEventList:userEventList, format:dateFormat });
 };
 
 function generateWeekendList(weekendList) {
     weekendList = [];
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < weekendToDisplay; i++) {
         let saturday = moment().day(6+7*i);
         saturday.set('hour', 13); // resolve pb of timezone
 
@@ -93,4 +96,38 @@ function generateWeekendList(weekendList) {
     }
 
 return weekendList;
+}
+
+async function generateUserEventList(weekendList) {
+    // list the user events
+
+
+    var promesse = new Promise((resolve, reject) => {
+        Event.find().exec(function(err,foundEvents){
+            let eventList=[];
+            eventList.length=52;
+
+            for (let j in foundEvents) {
+                let event = foundEvents[j];
+                let eventStartDate = moment(event.startDate);
+                let eventEndDate = moment(event.endDate);
+
+                for (let i = 0; i < weekendToDisplay;i++) {
+                    let weekendStartDate = weekendList[i][0].moment;
+                    let weekendEndDate = weekendList[i][weekendList[i].length-1].moment;
+
+
+                    if (eventEndDate.isBefore(weekendStartDate,'day') || weekendEndDate.isBefore(eventStartDate,'day') ) {
+                    }
+                    else {
+                        eventList[i] = event;
+                        eventList[i].title = validator.unescape(eventList[i].title);
+                    }
+                }
+            }
+            resolve(eventList);
+        })
+    });
+
+    return(promesse);   
 }

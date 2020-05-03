@@ -13,8 +13,8 @@ block content
     - notesValue = body.notes
   else
     - titleValue = ''
-    - startDateValue = ''
-    - endDateValue = ''
+    - startDateValue = params.startDate
+    - endDateValue = params.endDate
     - notesValue = ''  
 
   form(method="post")
